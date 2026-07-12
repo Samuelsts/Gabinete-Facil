@@ -1,0 +1,94 @@
+@import 'tailwindcss';
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+select {
+  background: #022c22;
+  color: white;
+  cursor: pointer;
+}
+
+select option {
+  background: white;
+  color: black;
+}
+
+@keyframes gf-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gf-underline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes gf-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.gf-animate-fade-up {
+  animation: gf-fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.gf-animate-underline {
+  animation: gf-underline 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+  transform-origin: left;
+}
+
+.gf-animate-glow {
+  animation: gf-glow 6s ease-in-out infinite;
+}
+
+/* Usuários que configuraram o SO para reduzir movimento não veem
+   nenhuma dessas animações — acessibilidade básica, custo zero. */
+@media (prefers-reduced-motion: reduce) {
+  .gf-animate-fade-up,
+  .gf-animate-underline,
+  .gf-animate-glow {
+    animation: none !important;
+  }
+}

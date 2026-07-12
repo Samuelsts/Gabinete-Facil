@@ -1,0 +1,323 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Perfil {
+  ADMINISTRADOR
+  EDITOR
+  VISUALIZADOR
+}
+
+model Usuario {
+  id             Int      @id @default(autoincrement())
+  nome           String   @unique
+  email          String?  @unique
+  senhaHash      String   @map("senha_hash")
+  perfil         Perfil   @default(VISUALIZADOR)
+  usuarioPadrao  Boolean  @default(false) @map("usuario_padrao")
+  ativo          Boolean  @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt      @map("updated_at")
+
+  cidadaosCriados     Cidadao[] @relation("CidadaoCriadoPor")
+  cidadaosAtualizados Cidadao[] @relation("CidadaoAtualizadoPor")
+
+
+  atendimentosCriados        Atendimento[] @relation("AtendimentoCriadoPor")
+  atendimentosAtualizados    Atendimento[] @relation("AtendimentoAtualizadoPor")
+
+
+  demandasCriadas     Demanda[] @relation("DemandaCriadoPor")
+  demandasAtualizadas Demanda[] @relation("DemandaAtualizadoPor")
+
+ 
+  indicacoesOficiosCriadas     IndicacaoOficio[] @relation("IndicacaoOficioCriadoPor")
+  indicacoesOficiosAtualizadas IndicacaoOficio[] @relation("IndicacaoOficioAtualizadoPor")
+
+
+  comunidadesCriadas     Comunidade[] @relation("ComunidadeCriadoPor")
+  comunidadesAtualizadas Comunidade[] @relation("ComunidadeAtualizadoPor")
+
+  agendaCriadas     Agenda[] @relation("AgendaCriadoPor")
+  agendaAtualizadas Agenda[] @relation("AgendaAtualizadoPor")
+
+  assessoresCriados     Assessor[] @relation("AssessorCriadoPor")
+  assessoresAtualizados Assessor[] @relation("AssessorAtualizadoPor")
+
+  @@map("usuarios")
+}
+
+model Cidadao {
+  id              Int       @id @default(autoincrement())
+  nome            String
+  celular         String?
+  endereco        String?
+  bairro          String?
+  dataNascimento  DateTime? @map("data_nascimento")
+  ativo           Boolean   @default(true)
+
+  criadoPorId     Int?      @map("criado_por_id")
+  atualizadoPorId Int?      @map("atualizado_por_id")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt      @map("updated_at")
+
+  criadoPor       Usuario?  @relation("CidadaoCriadoPor", fields: [criadoPorId], references: [id])
+  atualizadoPor   Usuario?  @relation("CidadaoAtualizadoPor", fields: [atualizadoPorId], references: [id])
+
+  atendimentos Atendimento[]
+  demandas Demanda[]
+
+  @@map("cidadaos")
+}
+
+enum StatusAtendimento {
+  ABERTO
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+model Atendimento {
+  id                   Int       @id @default(autoincrement())
+  cidadaoId            Int       @map("cidadao_id")
+  bairro               String?
+  dataAtendimento      DateTime  @map("data_atendimento")
+  responsavelAssessorId Int       @map("responsavel_assessor_id")
+  descricao            String?
+  status               StatusAtendimento @default(ABERTO)
+  dataConclusao        DateTime? @map("data_conclusao")
+  ativo                Boolean   @default(true)
+
+  criadoPorId          Int?      @map("criado_por_id")
+  atualizadoPorId      Int?      @map("atualizado_por_id")
+
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt      @map("updated_at")
+
+  cidadao              Cidadao   @relation(fields: [cidadaoId], references: [id])
+  responsavelAssessor    Assessor  @relation(fields: [responsavelAssessorId], references: [id])
+  criadoPor            Usuario?  @relation("AtendimentoCriadoPor", fields: [criadoPorId], references: [id])
+  atualizadoPor        Usuario?  @relation("AtendimentoAtualizadoPor", fields: [atualizadoPorId], references: [id])
+  anexos               AtendimentoAnexo[]
+
+  @@map("atendimentos")
+}
+
+model AtendimentoAnexo {
+  id            Int      @id @default(autoincrement())
+  atendimentoId Int      @map("atendimento_id")
+  nomeArquivo   String   @map("nome_arquivo")
+  caminho       String
+  tipo          String
+  tamanho       Int
+  dataEnvio     DateTime @default(now()) @map("data_envio")
+
+  atendimento   Atendimento @relation(fields: [atendimentoId], references: [id])
+
+  @@map("atendimento_anexos")
+}
+
+enum StatusDemanda {
+  ABERTO
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+enum PrioridadeDemanda {
+  BAIXA
+  NORMAL
+  ALTA
+}
+
+model Demanda {
+  id                   Int       @id @default(autoincrement())
+  cidadaoId            Int       @map("cidadao_id")
+  bairro               String?
+  dataAbertura         DateTime  @map("data_abertura")
+  responsavelAssessorId Int       @map("responsavel_assessor_id")
+  descricao            String?
+  status               StatusDemanda     @default(ABERTO)
+  prioridade           PrioridadeDemanda @default(NORMAL)
+  dataConclusao        DateTime? @map("data_conclusao")
+  ativo                Boolean   @default(true)
+
+  criadoPorId          Int?      @map("criado_por_id")
+  atualizadoPorId      Int?      @map("atualizado_por_id")
+
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt      @map("updated_at")
+
+  cidadao              Cidadao   @relation(fields: [cidadaoId], references: [id])
+  responsavelAssessor    Assessor  @relation(fields: [responsavelAssessorId], references: [id])
+  criadoPor            Usuario?  @relation("DemandaCriadoPor", fields: [criadoPorId], references: [id])
+  atualizadoPor        Usuario?  @relation("DemandaAtualizadoPor", fields: [atualizadoPorId], references: [id])
+  anexos               DemandaAnexo[]
+
+  @@map("demandas")
+}
+
+model DemandaAnexo {
+  id          Int      @id @default(autoincrement())
+  demandaId   Int      @map("demanda_id")
+  nomeArquivo String   @map("nome_arquivo")
+  caminho     String
+  tipo        String
+  tamanho     Int
+  dataEnvio   DateTime @default(now()) @map("data_envio")
+
+  demanda     Demanda  @relation(fields: [demandaId], references: [id])
+
+  @@map("demanda_anexos")
+}
+
+
+
+enum TipoIndicacaoOficio {
+  INDICACAO
+  OFICIO
+}
+
+enum StatusIndicacaoOficio {
+  ABERTO
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+model IndicacaoOficio {
+  id                   Int      @id @default(autoincrement())
+  tipo                 TipoIndicacaoOficio
+  numeroProtocolo      String?  @map("numero_protocolo")
+  destinatario         String?
+  dataRegistro         DateTime @map("data_registro")
+  responsavelAssessorId Int      @map("responsavel_assessor_id")
+  descricao            String?
+  status               StatusIndicacaoOficio @default(ABERTO)
+  dataConclusao        DateTime? @map("data_conclusao")
+  ativo                Boolean  @default(true)
+
+  criadoPorId          Int?     @map("criado_por_id")
+  atualizadoPorId      Int?     @map("atualizado_por_id")
+
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt      @map("updated_at")
+
+  responsavelAssessor    Assessor @relation(fields: [responsavelAssessorId], references: [id])
+  criadoPor            Usuario? @relation("IndicacaoOficioCriadoPor", fields: [criadoPorId], references: [id])
+  atualizadoPor        Usuario? @relation("IndicacaoOficioAtualizadoPor", fields: [atualizadoPorId], references: [id])
+  anexos               IndicacaoOficioAnexo[]
+
+  @@map("indicacoes_oficios")
+}
+
+model IndicacaoOficioAnexo {
+  id                Int      @id @default(autoincrement())
+  indicacaoOficioId Int      @map("indicacao_oficio_id")
+  nomeArquivo       String   @map("nome_arquivo")
+  caminho           String
+  tipo              String
+  tamanho           Int
+  dataEnvio         DateTime @default(now()) @map("data_envio")
+
+  indicacaoOficio   IndicacaoOficio @relation(fields: [indicacaoOficioId], references: [id])
+
+  @@map("indicacao_oficio_anexos")
+}
+
+
+enum StatusComunidade {
+  ABERTO
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+model Comunidade {
+  id                   Int      @id @default(autoincrement())
+  nome                 String?
+  bairro               String
+  descricaoAcao        String?  @map("descricao_acao")
+  liderComunidade      String?  @map("lider_comunidade")
+  responsavelAssessorId Int      @map("responsavel_assessor_id")
+  data                 DateTime
+  status               StatusComunidade @default(ABERTO)
+  dataConclusao        DateTime? @map("data_conclusao")
+  ativo                Boolean  @default(true)
+
+  criadoPorId          Int?     @map("criado_por_id")
+  atualizadoPorId      Int?     @map("atualizado_por_id")
+
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt      @map("updated_at")
+
+  responsavelAssessor    Assessor @relation(fields: [responsavelAssessorId], references: [id])
+  criadoPor            Usuario? @relation("ComunidadeCriadoPor", fields: [criadoPorId], references: [id])
+  atualizadoPor        Usuario? @relation("ComunidadeAtualizadoPor", fields: [atualizadoPorId], references: [id])
+
+  @@map("comunidades")
+}
+
+enum StatusAgenda {
+  ABERTO
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+model Agenda {
+  id              Int      @id @default(autoincrement())
+  data            DateTime
+  nome            String?
+  bairro          String?
+  acaoCompromisso String   @map("acao_compromisso")
+  descricao       String?
+  status          StatusAgenda @default(ABERTO)
+  dataConclusao   DateTime? @map("data_conclusao")
+  ativo           Boolean  @default(true)
+
+  criadoPorId     Int?     @map("criado_por_id")
+  atualizadoPorId Int?     @map("atualizado_por_id")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  criadoPor       Usuario? @relation("AgendaCriadoPor", fields: [criadoPorId], references: [id])
+  atualizadoPor   Usuario? @relation("AgendaAtualizadoPor", fields: [atualizadoPorId], references: [id])
+
+  @@map("agenda")
+}
+
+model Assessor {
+  id             Int       @id @default(autoincrement())
+  nome           String
+  celular        String?
+  endereco       String?
+  bairro         String?
+  dataNascimento DateTime? @map("data_nascimento")
+  assessorPadrao Boolean   @default(false) @map("assessor_padrao")
+  ativo          Boolean   @default(true)
+
+  criadoPorId     Int?     @map("criado_por_id")
+  atualizadoPorId Int?     @map("atualizado_por_id")
+
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt      @map("updated_at")
+
+  criadoPor      Usuario?  @relation("AssessorCriadoPor", fields: [criadoPorId], references: [id])
+  atualizadoPor  Usuario?  @relation("AssessorAtualizadoPor", fields: [atualizadoPorId], references: [id])
+
+  atendimentos      Atendimento[]
+  demandas          Demanda[]
+  comunidades       Comunidade[]
+  indicacoesOficios IndicacaoOficio[]
+
+  @@map("assessores")
+}

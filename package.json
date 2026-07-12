@@ -1,0 +1,80 @@
+{
+  "name": "gabinete-facil",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "gerar-template-db": "ts-node --project prisma/tsconfig.seed.json prisma/gerar-template.ts",
+    "build:next": "next build",
+    "dev:next": "next dev",
+    "electron:build": "esbuild electron/main.ts electron/preload.ts --bundle --platform=node --external:electron --external:@prisma/client --external:.prisma/client --external:pdfkit --external:exceljs --external:archiver --outdir=dist-electron",
+    "electron:start": "cross-env NODE_ENV=development electron .",
+    "dist": "npm run build:next && npm run electron:build && electron-builder",
+    "dev": "concurrently -k \"npm:dev:next\" \"npm run electron:build && wait-on tcp:3000 && npm run electron:start\""
+  },
+  "build": {
+    "appId": "com.gabinetefacil.app",
+    "productName": "Gabinete Fácil",
+    "asar": false,
+    "files": [
+      "dist-electron/**/*",
+      "out/**/*",
+      "node_modules/**/*",
+      "node_modules/.prisma/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/gabinete-template.db",
+        "to": "gabinete-template.db"
+      },
+      {
+        "from": "node_modules/.prisma",
+        "to": "app/node_modules/.prisma"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "prisma": {
+    "seed": "ts-node --project prisma/tsconfig.seed.json prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "archiver": "7.0.1",
+    "bcryptjs": "^3.0.3",
+    "exceljs": "^4.4.0",
+    "next": "16.2.10",
+    "pdfkit": "^0.19.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/archiver": "6.0.4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/pdfkit": "^0.17.6",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^10.0.3",
+    "cross-env": "^10.1.0",
+    "electron": "^43.0.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "prisma": "6.19.3",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5",
+    "wait-on": "^9.0.10"
+  }
+}
