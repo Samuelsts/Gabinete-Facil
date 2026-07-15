@@ -82,6 +82,10 @@ import { resetarDadosSistema } from './services/reset';
 
 import { garantirPastasBase, garantirBancoInicial } from './config/paths';
 
+import { obterHistoricoCidadao } from "./services/historicoCidadao";
+
+
+
 const isDev = process.env.NODE_ENV === 'development';
 
 function createWindow() {
@@ -154,6 +158,18 @@ ipcMain.handle(
     }
   },
 );
+
+ipcMain.handle("cidadaos:historico", async (_event, cidadaoId: number) => {
+  try {
+    const historico = await obterHistoricoCidadao(cidadaoId);
+    return { sucesso: true, ...historico };
+  } catch (erro) {
+    return { sucesso: false, erro: (erro as Error).message };
+  }
+});
+
+
+
 
 //handle atendimentos
 ipcMain.handle('atendimentos:listar', async (_event, filtros) => {

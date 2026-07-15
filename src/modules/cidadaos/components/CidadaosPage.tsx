@@ -10,6 +10,7 @@ import { useSessao } from '@/contexts/SessaoContext';
 import { CidadaoFormModal } from './CidadaoFormModal';
 import { Pagination } from '@/components/Pagination/Pagination';
 import { usePermissao } from '@/hooks/usePermissao';
+import { HistoricoCidadaoModal } from './HistoricoCidadaoModal';
 
 export function CidadaosPage() {
   const { usuario } = useSessao();
@@ -25,6 +26,10 @@ export function CidadaosPage() {
   const [versao, setVersao] = useState(0);
   const [modalAberto, setModalAberto] = useState(false);
   const [cidadaoEditando, setCidadaoEditando] = useState<Cidadao | null>(null);
+
+  const [cidadaoHistorico, setCidadaoHistorico] = useState<Cidadao | null>(
+    null,
+  );
 
   const { podeCriar, podeEditar, podeExcluir } = usePermissao();
 
@@ -131,6 +136,12 @@ export function CidadaosPage() {
                   <td>{c.celular ?? '-'}</td>
                   <td>{c.bairro ?? '-'}</td>
                   <td>
+                    <button
+                      onClick={() => setCidadaoHistorico(c)}
+                      className="text-emerald-400 cursor-pointer hover:text-blue-900 mr-3"
+                    >
+                      Ver histórico
+                    </button>
                     {podeEditar && (
                       <button
                         onClick={() => setCidadaoEditando(c)}
@@ -174,6 +185,10 @@ export function CidadaosPage() {
           setCidadaoEditando(null);
           recarregar();
         }}
+      />
+      <HistoricoCidadaoModal
+        cidadao={cidadaoHistorico}
+        onFechar={() => setCidadaoHistorico(null)}
       />
     </div>
   );

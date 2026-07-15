@@ -22,6 +22,11 @@ export interface DadosCidadaoInput {
   dataNascimento?: string;
 }
 
+export interface HistoricoCidadao {
+  atendimentos: (Atendimento & { responsavelAssessor?: { nome: string } })[];
+  demandas: (Demanda & { responsavelAssessor?: { nome: string } })[];
+}
+
 export interface FiltrosCidadaoInput {
   busca?: string;
   pagina?: number;
@@ -627,6 +632,13 @@ declare global {
       resetarDadosSistema: () => Promise<{
         sucesso: boolean;
         caminhoBackup?: string;
+        erro?: string;
+      }>;
+
+      obterHistoricoCidadao: (cidadaoId: number) => Promise<{
+        sucesso: boolean;
+        atendimentos?: HistoricoCidadao['atendimentos'];
+        demandas?: HistoricoCidadao['demandas'];
         erro?: string;
       }>;
     };

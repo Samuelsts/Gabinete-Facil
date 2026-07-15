@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { RelatorioAniversariantes } from "./RelatorioAniversariantes";
-import { RelatorioAtendimentos } from "./RelatorioAtendimentos";
-import { RelatorioDemandas } from "./RelatorioDemandas";
-import { RelatorioIndicacoesOficios } from "./RelatorioIndicacoesOficios";
-import { RelatorioComunidades } from "./RelatorioComunidades";
-import { RelatorioAgenda } from "./RelatorioAgenda";
-import { RelatorioCidadaos } from "./RelatorioCidadaos";
-import { RelatorioAssessores } from "./RelatorioAssessores";
+import { useState } from 'react';
+import { RelatorioAniversariantes } from './RelatorioAniversariantes';
+import { RelatorioAtendimentos } from './RelatorioAtendimentos';
+import { RelatorioDemandas } from './RelatorioDemandas';
+import { RelatorioIndicacoesOficios } from './RelatorioIndicacoesOficios';
+import { RelatorioComunidades } from './RelatorioComunidades';
+import { RelatorioAgenda } from './RelatorioAgenda';
+import { RelatorioCidadaos } from './RelatorioCidadaos';
+import { RelatorioAssessores } from './RelatorioAssessores';
 
 type RelatorioAtivo =
-  | "menu"
-  | "aniversariantes-cidadaos"
-  | "aniversariantes-assessores"
-  | "atendimentos"
-  | "demandas"
-  | "indicacoesOficios"
-  | "comunidades"
-  | "agenda"
-  | "cidadaos"
-  | "assessores";
+  | 'menu'
+  | 'aniversariantes-cidadaos'
+  | 'aniversariantes-assessores'
+  | 'atendimentos'
+  | 'demandas'
+  | 'indicacoesOficios'
+  | 'comunidades'
+  | 'agenda'
+  | 'cidadaos'
+  | 'assessores';
 
 // Declarado FORA do componente RelatoriosPage: um componente definido
 // dentro do corpo de outro é recriado a cada render (nova referência
@@ -40,13 +40,13 @@ function BotaoVoltar({ onClick }: { onClick: () => void }) {
 }
 
 export function RelatoriosPage() {
-  const [ativo, setAtivo] = useState<RelatorioAtivo>("menu");
+  const [ativo, setAtivo] = useState<RelatorioAtivo>('menu');
 
   function voltar() {
-    setAtivo("menu");
+    setAtivo('menu');
   }
 
-  if (ativo === "aniversariantes-cidadaos") {
+  if (ativo === 'aniversariantes-cidadaos') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -55,7 +55,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "aniversariantes-assessores") {
+  if (ativo === 'aniversariantes-assessores') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -64,7 +64,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "atendimentos") {
+  if (ativo === 'atendimentos') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -73,7 +73,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "demandas") {
+  if (ativo === 'demandas') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -82,7 +82,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "indicacoesOficios") {
+  if (ativo === 'indicacoesOficios') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -91,7 +91,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "comunidades") {
+  if (ativo === 'comunidades') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -100,7 +100,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "agenda") {
+  if (ativo === 'agenda') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -109,7 +109,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "cidadaos") {
+  if (ativo === 'cidadaos') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -118,7 +118,7 @@ export function RelatoriosPage() {
     );
   }
 
-  if (ativo === "assessores") {
+  if (ativo === 'assessores') {
     return (
       <div>
         <BotaoVoltar onClick={voltar} />
@@ -129,31 +129,33 @@ export function RelatoriosPage() {
 
   return (
     <div>
-      <h1 className="text-xl text-emerald-900 font-semibold mb-4">Relatórios</h1>
+      <h1 className="text-xl text-emerald-900 font-semibold mb-4">
+        Relatórios
+      </h1>
 
       <div className="grid grid-cols-2 text-emerald-900 gap-3 max-w-2xl">
         <button
-          onClick={() => setAtivo("aniversariantes-cidadaos")}
+          onClick={() => setAtivo('aniversariantes-cidadaos')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
-          <p className="font-semibold">Aniversariantes de Cidadãos</p>
+          <p className="font-semibold">Cidadãos Aniversariantes</p>
           <p className="text-sm text-emerald-500 mt-1">
             Filtrar por mês, com opção de exportação.
           </p>
         </button>
 
         <button
-          onClick={() => setAtivo("aniversariantes-assessores")}
+          onClick={() => setAtivo('aniversariantes-assessores')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
-          <p className="font-semibold">Aniversariantes de Assessores</p>
+          <p className="font-semibold">Assessores Aniversariantes</p>
           <p className="text-sm text-emerald-500 mt-1">
             Filtrar por mês, com opção de exportação.
           </p>
         </button>
 
         <button
-          onClick={() => setAtivo("atendimentos")}
+          onClick={() => setAtivo('atendimentos')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
           <p className="font-semibold">Atendimentos</p>
@@ -163,7 +165,7 @@ export function RelatoriosPage() {
         </button>
 
         <button
-          onClick={() => setAtivo("demandas")}
+          onClick={() => setAtivo('demandas')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
           <p className="font-semibold">Demandas</p>
@@ -173,7 +175,7 @@ export function RelatoriosPage() {
         </button>
 
         <button
-          onClick={() => setAtivo("indicacoesOficios")}
+          onClick={() => setAtivo('indicacoesOficios')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
           <p className="font-semibold">Indicações e Ofícios</p>
@@ -183,7 +185,7 @@ export function RelatoriosPage() {
         </button>
 
         <button
-          onClick={() => setAtivo("comunidades")}
+          onClick={() => setAtivo('comunidades')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
           <p className="font-semibold">Comunidades</p>
@@ -193,7 +195,7 @@ export function RelatoriosPage() {
         </button>
 
         <button
-          onClick={() => setAtivo("agenda")}
+          onClick={() => setAtivo('agenda')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
           <p className="font-semibold">Agenda</p>
@@ -203,7 +205,7 @@ export function RelatoriosPage() {
         </button>
 
         <button
-          onClick={() => setAtivo("cidadaos")}
+          onClick={() => setAtivo('cidadaos')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
           <p className="font-semibold">Cidadãos</p>
@@ -213,7 +215,7 @@ export function RelatoriosPage() {
         </button>
 
         <button
-          onClick={() => setAtivo("assessores")}
+          onClick={() => setAtivo('assessores')}
           className="text-left border border-emerald-800 rounded-lg p-4 hover:bg-emerald-700 cursor-pointer hover:text-white"
         >
           <p className="font-semibold">Assessores</p>

@@ -153,4 +153,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('usuariosGestao:inativar', id),
 
   resetarDadosSistema: () => ipcRenderer.invoke('sistema:resetarDados'),
+
+  obterHistoricoCidadao: (cidadaoId: number) =>
+    ipcRenderer.invoke('cidadaos:historico', cidadaoId),
 });

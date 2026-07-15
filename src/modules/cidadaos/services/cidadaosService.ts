@@ -5,6 +5,8 @@ import type {
   ResultadoPaginado,
 } from '@/types/electron';
 
+import type { HistoricoCidadao } from '@/types/electron';
+
 // Usada pela tela de listagem de Cidadãos — respeita paginação real.
 export async function listarCidadaosPaginado(
   filtros?: FiltrosCidadaoInput,
@@ -68,4 +70,17 @@ export async function inativarCidadao(id: number, usuarioId: number) {
   if (!res.sucesso) {
     throw new Error(res.erro ?? 'Erro ao inativar cidadão');
   }
+}
+
+export async function obterHistoricoCidadao(
+  cidadaoId: number,
+): Promise<HistoricoCidadao> {
+  const res = await window.electronAPI.obterHistoricoCidadao(cidadaoId);
+  if (!res.sucesso) {
+    throw new Error(res.erro ?? 'Erro ao obter histórico do cidadão');
+  }
+  return {
+    atendimentos: res.atendimentos ?? [],
+    demandas: res.demandas ?? [],
+  };
 }
